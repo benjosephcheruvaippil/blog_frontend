@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moschino | Minimalist Free HTML Portfolio by WowThemes.net</title>
+<script>
+	$("#titleanchor").click(function(){
+	alert("Clicked");
+	return false;
+})
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel='stylesheet' href='css/woocommerce-layout.css' type='text/css' media='all'/>
 <link rel='stylesheet' href='css/woocommerce-smallscreen.css' type='text/css' media='only screen and (max-width: 768px)'/>
@@ -159,9 +165,10 @@ dataType:"json",
 success:function(response){
 	console.log(response);
 	for(var i=0;i<response.length;i++){
-	$("#articleDiv").append("<article> <header class='entry-header'> <h1 class='entry-title'><a href='blog-detail.html' rel='bookmark'>"+response[i].title+"</a></h1> <div class='entry-meta'> <span class='posted-on'><time class='entry-date published'>April 12, 2016</time></span> <span class='comments-link'><a href='#'>{author_name}</a></span> </div> <div class='entry-thumbnail'> <img src='http://s3.amazonaws.com/caymandemo/wp-content/uploads/sites/10/2015/09/30160348/sep4.jpg' alt=''> </div> </header> <div class='entry-summary'> <p> "+response[i].contentsnapshot+" <a class='more-link' href='blog-detail.html'>Read more</a> </p> </div> <footer class='entry-footer'> <span class='cat-links'> Posted in <a href='#' rel='category tag'>audio</a>, <a href='#' rel='category tag'>embed</a>, <a href='#' rel='category tag'>media</a> </span> </footer> </article>")
+	var published_date=ConvertDate(response[i].created_on);
+	var author_name=response[i].first_name+' '+response[i].last_name
+	$("#articleDiv").append("<article> <header class='entry-header'> <h1 class='entry-title'><a href='blog-detail.html?title="+response[i].title+"&blog="+response[i].id+"' rel='bookmark'>"+response[i].title+"</a></h1> <div class='entry-meta'> <span class='posted-on'><time class='entry-date published'>"+published_date+"</time></span> <span class='comments-link'><a href='#'>"+author_name+"</a></span> </div> <div class='entry-thumbnail'> <img src='http://s3.amazonaws.com/caymandemo/wp-content/uploads/sites/10/2015/09/30160348/sep4.jpg' alt=''> </div> </header> <div class='entry-summary'> <p> "+response[i].contentsnapshot+" <a class='more-link' href='blog-detail.html?title="+response[i].title+"&blog="+response[i].id+"'>Read more</a> </p> </div> <footer class='entry-footer'> <span class='cat-links'> Posted in <a href='#' rel='category tag'>audio</a>, <a href='#' rel='category tag'>embed</a>, <a href='#' rel='category tag'>media</a> </span> </footer> </article>")
 	}
-	
 },
 failure:function(response){
 alert("failure");
@@ -170,6 +177,25 @@ error:function(response){
 alert("error");
 }
 })
+
+function ConvertDate(date){
+var dateOnly=date.split("T")[0];
+var monthDict={};
+monthDict["01"]="January"
+monthDict["02"]="February"
+monthDict["03"]="March"
+monthDict["04"]="April"
+monthDict["05"]="May"
+monthDict["06"]="June"
+monthDict["07"]="July"
+monthDict["08"]="August"
+monthDict["09"]="September"
+monthDict["10"]="October"
+monthDict["11"]="November"
+monthDict["12"]="December"
+var outputDateFormat = dateOnly.split("-")[2]+" "+monthDict[dateOnly.split("-")[1]]+", "+dateOnly.split("-")[0]
+return outputDateFormat;
+}
 })
 </script>
 </body>

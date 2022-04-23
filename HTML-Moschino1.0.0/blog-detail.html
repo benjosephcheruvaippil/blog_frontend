@@ -50,14 +50,14 @@
 				<main id="main" class="site-main" role="main">
 				<article>
 				<header class="entry-header">
-				<h1 class="entry-title">Somewhere in time</h1>
+				<h1 class="entry-title"></h1>
 				<div class="entry-meta">
-						<span class="posted-on"><time class="entry-date published">April 6, 2016</time></span>						
-						<span class="comments-link"><a href="#">Leave a comment</a></span>
-					</div>
-				<div class="entry-thumbnail">					
-					<img src="http://s3.amazonaws.com/caymandemo/wp-content/uploads/sites/10/2015/09/30160348/sep4.jpg" alt="">
+						<span class="posted-on"><time class="entry-date published"></time></span>						
+						<span class="comments-link"><a href="#"></a></span>
 				</div>
+				<!-- <div class="entry-thumbnail">					
+					<img src="http://s3.amazonaws.com/caymandemo/wp-content/uploads/sites/10/2015/09/30160348/sep4.jpg" alt="">
+				</div> -->
 				</header>
 				<!-- .entry-header -->			
 				<div class="entry-content">
@@ -167,15 +167,13 @@
 					</aside>
 					<aside id="text-7" class="widget widget_text">
 					<h4 class="widget-title">Follow us</h4>
-					<div class="textwidget">
-						<!-- Place this tag in your head or just before your close body tag. -->
+					<!-- <div class="textwidget">
 						<script src="https://apis.google.com/js/platform.js" async="" defer="" gapi_processed="true"></script>
-						<!-- Place this tag where you want the widget to render. -->
 						<div id="___page_0" style="text-indent: 0px; margin: 0px; padding: 0px; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 300px; height: 377px; background: transparent;">
 							<iframe frameborder="0" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position: static; top: 0px; width: 300px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 377px;" tabindex="0" vspace="0" width="100%" id="I0_1460806394603" name="I0_1460806394603" src="https://apis.google.com/u/0/_/widget/render/page?usegapi=1&amp;href=%2F%2Fplus.google.com%2Fu%2F0%2F110916582192388695332&amp;rel=publisher&amp;origin=http%3A%2F%2Fwww.themepush.com&amp;gsrc=3p&amp;ic=1&amp;jsh=m%3B%2F_%2Fscs%2Fapps-static%2F_%2Fjs%2Fk%3Doz.gapi.en.5rbYCKK8ELg.O%2Fm%3D__features__%2Fam%3DAQ%2Frt%3Dj%2Fd%3D1%2Frs%3DAGLTcCNt4tfE4T2zmac5ke0V9FW49A3yCA#_methods=onPlusOne%2C_ready%2C_close%2C_open%2C_resizeMe%2C_renderstart%2Concircled%2Cdrefresh%2Cerefresh%2Conload&amp;id=I0_1460806394603&amp;parent=http%3A%2F%2Fwww.themepush.com&amp;pfname=&amp;rpctoken=19037393" data-gapiattached="true" title="+Badge">
 							</iframe>
 						</div>
-					</div>
+					</div> -->
 					</aside>
 				</div>
 				<!-- .widget-area -->
@@ -204,17 +202,25 @@
 <script>
 	$(document).ready(function(){
 
+		var blogId = getUrlVars()["blog"];
+
 var request= $.ajax({
 type:"POST",
 url:"http://127.0.0.1:8000/api/BlogById",
 contentType:"application/json; charset=utf-8",
-data:JSON.stringify({'BlogId':'1'}),
+data:JSON.stringify({'BlogId':blogId}),
 dataType:"json",
 //headers:{"Authorization":Token},
 success:function(response){
 	console.log(response);
 	for(var i=0;i<response.length;i++){
+	var published_date=ConvertDate(response[i].created_on);
+	var author_name=response[i].first_name+' '+response[i].last_name;
+	$(".entry-title").append(response[i].title)
 	$(".entry-content").append(response[i].content)
+	$(".published").append(published_date)
+	$(".comments-link").append(author_name)
+
 	}
 	
 },
@@ -225,6 +231,39 @@ error:function(response){
 alert("error");
 }
 })
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+function ConvertDate(date){
+var dateOnly=date.split("T")[0];
+var monthDict={};
+monthDict["01"]="January"
+monthDict["02"]="February"
+monthDict["03"]="March"
+monthDict["04"]="April"
+monthDict["05"]="May"
+monthDict["06"]="June"
+monthDict["07"]="July"
+monthDict["08"]="August"
+monthDict["09"]="September"
+monthDict["10"]="October"
+monthDict["11"]="November"
+monthDict["12"]="December"
+var outputDateFormat = dateOnly.split("-")[2]+" "+monthDict[dateOnly.split("-")[1]]+", "+dateOnly.split("-")[0]
+return outputDateFormat;
+}
+
 })
 </script>
 
